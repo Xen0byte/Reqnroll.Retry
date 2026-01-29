@@ -17,8 +17,8 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Title>Reqnroll.Retry.NUnit</Title>
-        <PackageId>Reqnroll.Retry.NUnit</PackageId>
+        <Title>Retry.Reqnroll.NUnit</Title>
+        <PackageId>Retry.Reqnroll.NUnit</PackageId>
         <Version>1.0.0</Version>
         <Authors>Aleksander Reinhardt</Authors>
         <Summary>Adds automatic retry functionality to Reqnroll tests using NUnit.</Summary>

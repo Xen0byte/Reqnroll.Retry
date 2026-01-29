@@ -17,8 +17,8 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Title>Reqnroll.Retry.MSTest</Title>
-        <PackageId>Reqnroll.Retry.MSTest</PackageId>
+        <Title>Retry.Reqnroll.MSTest</Title>
+        <PackageId>Retry.Reqnroll.MSTest</PackageId>
         <Version>1.0.0</Version>
         <Authors>Aleksander Reinhardt</Authors>
         <Summary>Adds automatic retry functionality to Reqnroll tests using MSTest.</Summary>
