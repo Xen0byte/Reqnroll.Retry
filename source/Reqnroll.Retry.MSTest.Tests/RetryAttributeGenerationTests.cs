@@ -20,26 +20,28 @@ public sealed class RetryAttributeGenerationTests
 
         Type? featureType = testAssembly.GetTypes().SingleOrDefault(type => type.Name.Contains("RetryAttribute") && type.Name.Contains("Feature"));
 
-        Assert.IsNotNull(featureType, "Expected to find a generated feature class containing 'RetryAttribute' and 'Feature' in the assembly.");
+        Assert.IsNotNull(featureType, @"Expected to find a generated feature class containing ""RetryAttribute"" and ""Feature"" in the assembly.");
 
         MethodInfo[] testMethods = featureType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
             .Where(method => method.GetCustomAttribute<TestMethodAttribute>() is not null).ToArray();
 
-        Assert.IsNotEmpty(testMethods, "Expected to find at least one test method with [TestMethod] attribute.");
+        Assert.IsNotEmpty(testMethods, @"Expected to find at least one test method with [TestMethod] attribute.");
 
         foreach (MethodInfo testMethod in testMethods)
         {
             RetryAttribute? retryAttribute = testMethod.GetCustomAttribute<RetryAttribute>();
 
-            Assert.IsNotNull(retryAttribute, $"Expected test method '{testMethod.Name}' to have the [Retry] attribute.");
-            Assert.AreEqual(ExpectedRetryCount, retryAttribute.MaxRetryAttempts, $"Expected test method '{testMethod.Name}' to have MaxRetryAttempts of {ExpectedRetryCount} (configured via ReqnrollRetryCount).");
+            Assert.IsNotNull(retryAttribute, $@"Expected test method ""{testMethod.Name}"" to have the [Retry] attribute.");
+            Assert.AreEqual(ExpectedRetryCount, retryAttribute.MaxRetryAttempts, $@"Expected test method ""{testMethod.Name}"" to have MaxRetryAttempts of {ExpectedRetryCount} (configured via ReqnrollRetryCount).");
         }
     }
 
     [TestMethod]
     public void Generated_Feature_Code_File_Should_Contain_Retry_Attribute()
     {
-        string projectDirectory = Path.GetDirectoryName(typeof(RetryAttributeGenerationTests).Assembly.Location)!;
+        string? projectDirectory = Path.GetDirectoryName(typeof(RetryAttributeGenerationTests).Assembly.Location);
+
+        Assert.IsNotNull(projectDirectory, "Could not determine assembly location directory.");
 
         DirectoryInfo? directory = new DirectoryInfo(projectDirectory);
 
@@ -53,7 +55,7 @@ public sealed class RetryAttributeGenerationTests
         string featuresDirectory = Path.Combine(directory.FullName, "Features");
         string generatedFilePath = Path.Combine(featuresDirectory, "RetryAttribute.feature.cs");
 
-        Assert.IsTrue(File.Exists(generatedFilePath), $"Expected generated file to exist at: {generatedFilePath}");
+        Assert.IsTrue(File.Exists(generatedFilePath), $"Expected generated file to exist at: {generatedFilePath}.");
 
         string generatedCode = File.ReadAllText(generatedFilePath);
 
