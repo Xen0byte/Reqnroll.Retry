@@ -42,7 +42,7 @@
 
     <ItemGroup>
         <PackageReference Include="Reqnroll.TUnit" Version="3.3.3" />
-        <PackageReference Include="TUnit" Version="1.12.90" />
+        <PackageReference Include="TUnit" Version="1.12.93" />
     </ItemGroup>
 
     <Target Name="DeleteBDDCodeBehindFiles" AfterTargets="AfterClean">
