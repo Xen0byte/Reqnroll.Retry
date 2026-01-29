@@ -10,6 +10,7 @@ SOURCE_DIRECTORY="$ROOT_DIRECTORY/source"
 OUTPUT_DIRECTORY="$ROOT_DIRECTORY/nupkgs"
 
 echo -e "\033[36mPacking Retry.Reqnroll Packages ...\033[0m"
+echo ""
 
 # purge output directory
 rm -rf "$OUTPUT_DIRECTORY"
@@ -19,9 +20,9 @@ mkdir -p "$OUTPUT_DIRECTORY"
 
 # pack all generator projects
 projects=(
-    "Reqnroll.Retry.MSTest",
-    "Reqnroll.Retry.NUnit",
-    "Reqnroll.Retry.xUnit",
+    "Reqnroll.Retry.MSTest"
+    "Reqnroll.Retry.NUnit"
+    "Reqnroll.Retry.xUnit"
     "Reqnroll.Retry.TUnit"
 )
 

@@ -10,6 +10,7 @@ $SourceDirectory = Join-Path $RootDirectory "source"
 $OutputDirectory = Join-Path $RootDirectory "nupkgs"
 
 Write-Host "Packing Retry.Reqnroll Packages ..." -ForegroundColor Cyan
+Write-Host ""
 
 # purge output directory
 if (Test-Path $OutputDirectory) {
