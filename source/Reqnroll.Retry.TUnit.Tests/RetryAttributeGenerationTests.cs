@@ -1,6 +1,4 @@
-using System.Reflection;
-
-namespace ReqnrollRetry.TUnitTests;
+namespace Reqnroll.Retry.TUnit.Tests;
 
 /// <summary>
 ///     Tests that verify the Retry attribute is correctly added to generated Reqnroll test methods.
@@ -11,18 +9,18 @@ public sealed class RetryAttributeGenerationTests
     public async Task Generated_Test_Methods_Should_Have_Retry_Attribute()
     {
         // Arrange
-        System.Reflection.Assembly testAssembly = typeof(RetryAttributeGenerationTests).Assembly;
+        Assembly testAssembly = typeof(RetryAttributeGenerationTests).Assembly;
         Type? featureType = testAssembly.GetTypes().FirstOrDefault(type => type.Name.Contains("RetryAttribute") && type.Name.EndsWith("Feature"));
 
         // Assert - Feature Class Was Generated
         await Assert.That(featureType).IsNotNull().Because("Expected to find a generated feature class containing 'RetryAttributeFeature' in the assembly.");
 
         // Debug - List All Methods And Their Attributes
-        System.Reflection.MethodInfo[] allMethods = featureType!.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly);
+        MethodInfo[] allMethods = featureType!.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         // Act - Find Test Methods In The Generated Feature Class
         // Note: TUnit Uses TUnit.Core.TestAttribute For Test Methods
-        System.Reflection.MethodInfo[] testMethods = allMethods
+        MethodInfo[] testMethods = allMethods
             .Where(method => method.GetCustomAttributes().Any(attribute => attribute.GetType().FullName?.Contains("TestAttribute") == true))
             .ToArray();
 
@@ -31,7 +29,7 @@ public sealed class RetryAttributeGenerationTests
         await Assert.That(testMethods.Length).IsGreaterThan(0).Because($"Expected to find at least one test method. Found methods: {methodNames}");
 
         // Assert - Each Test Method Has The Retry Attribute
-        foreach (System.Reflection.MethodInfo testMethod in testMethods)
+        foreach (MethodInfo testMethod in testMethods)
         {
             RetryAttribute? retryAttribute = testMethod.GetCustomAttribute<RetryAttribute>();
 

@@ -11,10 +11,14 @@
         <IsPackable>false</IsPackable>
         <!-- Enable New Dotnet Test Experience For .NET 10 -->
         <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-        <!-- Use A Root Namespace Without TUnit As A Standalone Segment To Avoid TUnit.Core Resolution Conflict -->
-        <!-- The Reqnroll.TUnit Generator Doesn't Use global:: Prefix For TUnit.Core References -->
-        <RootNamespace>ReqnrollRetry.TUnitTests</RootNamespace>
-        <AssemblyName>ReqnrollRetry.TUnitTests</AssemblyName>
+        <!--
+            PENDING UPSTREAM FIX: https://github.com/thomhurst/TUnit/issues/4602
+            This project uses the standard Reqnroll.Retry.TUnit.Tests namespace for parity with other test projects.
+            This requires Reqnroll.TUnit to consistently use global:: prefix for all TUnit.Core type references.
+            Until the upstream fix is released, set RootNamespace to a workaround value:
+            <RootNamespace>ReqnrollRetry.TUnitTests</RootNamespace>
+            <AssemblyName>ReqnrollRetry.TUnitTests</AssemblyName>
+        -->
     </PropertyGroup>
 
     <PropertyGroup>

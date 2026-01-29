@@ -11,7 +11,7 @@
 #region Designer generated code
 #pragma warning disable
 using Reqnroll;
-namespace ReqnrollRetry.TUnitTests.Features
+namespace Reqnroll.Retry.TUnit.Tests.Features
 {
     
     

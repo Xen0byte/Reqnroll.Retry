@@ -1,4 +1,4 @@
-namespace ReqnrollRetry.TUnitTests.StepBindings;
+namespace Reqnroll.Retry.TUnit.Tests.StepBindings;
 
 [Binding]
 public sealed class RetryAttributeSteps

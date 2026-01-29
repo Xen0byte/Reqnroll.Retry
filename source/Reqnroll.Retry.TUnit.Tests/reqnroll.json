@@ -1,6 +1,6 @@
 {
     "bindingAssemblies": [
-        { "assembly": "ReqnrollRetry.TUnitTests" }
+        { "assembly": "Reqnroll.Retry.TUnit.Tests" }
     ],
     "language": {
         "feature": "en-GB",
