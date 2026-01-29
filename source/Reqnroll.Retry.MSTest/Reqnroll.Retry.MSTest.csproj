@@ -1,9 +1,44 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
+        <IsReqnrollGeneratorPlugin>true</IsReqnrollGeneratorPlugin>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <DebugType>portable</DebugType>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Title>Reqnroll.Retry.MSTest</Title>
+        <PackageId>Reqnroll.Retry.MSTest</PackageId>
+        <Version>1.0.0</Version>
+        <Authors>Aleksander Reinhardt</Authors>
+        <Summary>Adds automatic retry functionality to Reqnroll tests using MSTest.</Summary>
+        <Description>A Reqnroll generator plugin that automatically adds the MSTest [Retry] attribute to all generated BDD test methods. Supports configurable retry count via the ReqnrollRetryCount MSBuild property.</Description>
+        <PackageTags>reqnroll;bdd;mstest;retry;testing;specflow</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Include Build Targets For Reqnroll Generator Plugin -->
+        <None Include="NuGet/build/**/*" Pack="true" PackagePath="build" />
+    </ItemGroup>
+
+    <Target Name="CopyGeneratorPluginToNuGetFolder" AfterTargets="Build">
+        <!-- Copy The Generator Plugin DLL After Every Build, So Local Development Works -->
+        <Copy SourceFiles="bin/$(Configuration)/netstandard2.0/Reqnroll.Retry.MSTest.dll" DestinationFolder="NuGet/build/netstandard2.0" SkipUnchangedFiles="true" />
+    </Target>
+
+    <ItemGroup>
+        <PackageReference Include="Reqnroll.CustomPlugin" Version="3.3.3" />
+    </ItemGroup>
 
 </Project>

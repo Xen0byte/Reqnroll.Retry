@@ -1,9 +1,54 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <RollForward>major</RollForward>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- Retry Count For BDD Tests (Used By The Code-Generated Retry Mechanism) -->
+        <ReqnrollRetryCount>2</ReqnrollRetryCount>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../Reqnroll.Retry.xUnit/Reqnroll.Retry.xUnit.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <PrivateAssets>all</PrivateAssets>
+        </ProjectReference>
+    </ItemGroup>
+
+    <!-- Import The Retry Targets File (Simulates What Happens When Consuming The NuGet Package) -->
+    <Import Project="../Reqnroll.Retry.xUnit/NuGet/build/Reqnroll.Retry.xUnit.targets" />
+
+    <ItemGroup>
+        <Content Include="reqnroll.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="xunit" Version="2.9.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+        <PackageReference Include="xRetry" Version="1.9.0" />
+        <PackageReference Include="Reqnroll.xUnit" Version="3.3.3" />
+    </ItemGroup>
+
+    <Target Name="DeleteBDDCodeBehindFiles" AfterTargets="AfterClean">
+        <ItemGroup>
+            <BDDCodeBehindFiles Include="**/*.feature.cs" />
+        </ItemGroup>
+
+        <Delete Files="@(BDDCodeBehindFiles)" />
+    </Target>
 
 </Project>

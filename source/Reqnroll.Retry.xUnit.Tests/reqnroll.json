@@ -1,0 +1,18 @@
+{
+    "bindingAssemblies": [
+        { "assembly": "Reqnroll.Retry.xUnit.Tests" }
+    ],
+    "language": {
+        "feature": "en-GB",
+        "binding": "en-GB"
+    },
+    "generator": {
+        "allowDebugGeneratedFiles": false,
+        "allowRowTests": true
+    },
+    "runtime": {
+        "missingOrPendingStepsOutcome": "Error",
+        "obsoleteBehavior": "Warn",
+        "stopAtFirstError": false
+    }
+}
