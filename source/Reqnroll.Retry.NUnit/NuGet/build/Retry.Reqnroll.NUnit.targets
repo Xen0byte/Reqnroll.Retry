@@ -4,7 +4,7 @@
         <!-- Default Retry Count For BDD Tests (Can Be Overridden In Consuming Projects) -->
         <ReqnrollRetryCount Condition="'$(ReqnrollRetryCount)' == ''">1</ReqnrollRetryCount>
 
-        <!-- Path To The Generator Plugin DLL (Underscore Prefix Indicates Internal/Private Property) -->
+        <!-- Path To The Generator Plugin DLL -->
         <_ReqnrollRetryGeneratorPluginPath>$(MSBuildThisFileDirectory)netstandard2.0\Reqnroll.Retry.NUnit.dll</_ReqnrollRetryGeneratorPluginPath>
     </PropertyGroup>
 
