@@ -1,0 +1,6 @@
+<Solution>
+    <Project Path="Reqnroll.Retry.MSTest/Reqnroll.Retry.MSTest.csproj"/>
+    <Project Path="Reqnroll.Retry.NUnit/Reqnroll.Retry.NUnit.csproj"/>
+    <Project Path="Reqnroll.Retry.TUnit/Reqnroll.Retry.TUnit.csproj"/>
+    <Project Path="Reqnroll.Retry.xUnit/Reqnroll.Retry.xUnit.csproj"/>
+</Solution>
