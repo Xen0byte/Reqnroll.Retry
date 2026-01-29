@@ -9,20 +9,10 @@
         <Nullable>enable</Nullable>
         <WarningsAsErrors>nullable</WarningsAsErrors>
         <IsPackable>false</IsPackable>
-        <!-- Enable New Dotnet Test Experience For .NET 10 -->
-        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-        <!--
-            PENDING UPSTREAM FIX: https://github.com/thomhurst/TUnit/issues/4602
-            This project uses the standard Reqnroll.Retry.TUnit.Tests namespace for parity with other test projects.
-            This requires Reqnroll.TUnit to consistently use global:: prefix for all TUnit.Core type references.
-            Until the upstream fix is released, set RootNamespace to a workaround value:
-            <RootNamespace>ReqnrollRetry.TUnitTests</RootNamespace>
-            <AssemblyName>ReqnrollRetry.TUnitTests</AssemblyName>
-        -->
     </PropertyGroup>
 
     <PropertyGroup>
-        <!-- Retry Count For BDD Tests (Used By The Code-Generated Retry Mechanism) -->
+        <!-- Retry Count Override (Default Is 1 Retry) -->
         <ReqnrollRetryCount>2</ReqnrollRetryCount>
     </PropertyGroup>
 
@@ -33,8 +23,8 @@
         </ProjectReference>
     </ItemGroup>
 
-    <!-- Import The Retry Targets File (Simulates What Happens When Consuming The NuGet Package) -->
-    <Import Project="../Reqnroll.Retry.TUnit/NuGet/build/Reqnroll.Retry.TUnit.targets" />
+    <!-- Import The Retry Targets File (Simulates NuGet Package Consumption) -->
+    <Import Project="../Reqnroll.Retry.TUnit/NuGet/build/Retry.Reqnroll.TUnit.targets" />
 
     <ItemGroup>
         <Content Include="reqnroll.json">
@@ -43,8 +33,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="TUnit" Version="1.12.80" />
         <PackageReference Include="Reqnroll.TUnit" Version="3.3.3" />
+        <PackageReference Include="TUnit" Version="1.12.90" />
     </ItemGroup>
 
     <Target Name="DeleteBDDCodeBehindFiles" AfterTargets="AfterClean">

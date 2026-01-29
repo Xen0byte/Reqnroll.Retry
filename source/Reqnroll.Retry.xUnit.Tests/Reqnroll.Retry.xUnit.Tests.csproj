@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>exe</OutputType>
@@ -12,7 +12,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <!-- Retry Count For BDD Tests (Used By The Code-Generated Retry Mechanism) -->
+        <!-- Retry Count Override (Default Is 1 Retry) -->
         <ReqnrollRetryCount>2</ReqnrollRetryCount>
     </PropertyGroup>
 
@@ -23,8 +23,8 @@
         </ProjectReference>
     </ItemGroup>
 
-    <!-- Import The Retry Targets File (Simulates What Happens When Consuming The NuGet Package) -->
-    <Import Project="../Reqnroll.Retry.xUnit/NuGet/build/Reqnroll.Retry.xUnit.targets" />
+    <!-- Import The Retry Targets File (Simulates NuGet Package Consumption) -->
+    <Import Project="../Reqnroll.Retry.xUnit/NuGet/build/Retry.Reqnroll.xUnit.targets" />
 
     <ItemGroup>
         <Content Include="reqnroll.json">
@@ -33,13 +33,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+        <PackageReference Include="Reqnroll.xUnit" Version="3.3.3" />
         <PackageReference Include="xunit" Version="2.9.3" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-        <PackageReference Include="Reqnroll.xUnit" Version="3.3.3" />
     </ItemGroup>
 
     <Target Name="DeleteBDDCodeBehindFiles" AfterTargets="AfterClean">

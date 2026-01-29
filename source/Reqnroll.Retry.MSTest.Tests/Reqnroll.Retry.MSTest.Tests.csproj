@@ -1,4 +1,4 @@
-<Project Sdk="MSTest.Sdk/4.0.2">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>exe</OutputType>
@@ -9,12 +9,10 @@
         <Nullable>enable</Nullable>
         <WarningsAsErrors>nullable</WarningsAsErrors>
         <IsPackable>false</IsPackable>
-        <!-- Enable New Dotnet Test Experience For .NET 10 -->
-        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     </PropertyGroup>
 
     <PropertyGroup>
-        <!-- Retry Count For BDD Tests (Used By The Code-Generated Retry Mechanism) -->
+        <!-- Retry Count Override (Default Is 1 Retry) -->
         <ReqnrollRetryCount>2</ReqnrollRetryCount>
     </PropertyGroup>
 
@@ -25,8 +23,8 @@
         </ProjectReference>
     </ItemGroup>
 
-    <!-- Import The Retry Targets File (Simulates What Happens When Consuming The NuGet Package) -->
-    <Import Project="../Reqnroll.Retry.MSTest/NuGet/build/Reqnroll.Retry.MSTest.targets" />
+    <!-- Import The Retry Targets File (Simulates NuGet Package Consumption) -->
+    <Import Project="../Reqnroll.Retry.MSTest/NuGet/build/Retry.Reqnroll.MSTest.targets" />
 
     <ItemGroup>
         <Content Include="reqnroll.json">
@@ -35,6 +33,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+        <PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
+        <PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
         <PackageReference Include="Reqnroll.MsTest" Version="3.3.3" />
     </ItemGroup>
 

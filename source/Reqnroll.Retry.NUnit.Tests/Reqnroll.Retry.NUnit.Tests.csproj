@@ -12,7 +12,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <!-- Retry Count For BDD Tests (Used By The Code-Generated Retry Mechanism) -->
+        <!-- Retry Count Override (Default Is 1 Retry) -->
         <ReqnrollRetryCount>2</ReqnrollRetryCount>
     </PropertyGroup>
 
@@ -23,8 +23,8 @@
         </ProjectReference>
     </ItemGroup>
 
-    <!-- Import The Retry Targets File (Simulates What Happens When Consuming The NuGet Package) -->
-    <Import Project="../Reqnroll.Retry.NUnit/NuGet/build/Reqnroll.Retry.NUnit.targets" />
+    <!-- Import The Retry Targets File (Simulates NuGet Package Consumption) -->
+    <Import Project="../Reqnroll.Retry.NUnit/NuGet/build/Retry.Reqnroll.NUnit.targets" />
 
     <ItemGroup>
         <Content Include="reqnroll.json">
@@ -33,9 +33,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="NUnit" Version="4.3.2" />
-        <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+        <PackageReference Include="NUnit" Version="4.4.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
         <PackageReference Include="Reqnroll.NUnit" Version="3.3.3" />
     </ItemGroup>
 
