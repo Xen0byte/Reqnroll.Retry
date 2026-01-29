@@ -17,6 +17,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- Expose ReqnrollRetryCount As Assembly Metadata For Runtime Access In Tests -->
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+            <_Parameter1>ReqnrollRetryCount</_Parameter1>
+            <_Parameter2>$(ReqnrollRetryCount)</_Parameter2>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="../Reqnroll.Retry.TUnit/Reqnroll.Retry.TUnit.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <PrivateAssets>all</PrivateAssets>
