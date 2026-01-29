@@ -2,8 +2,11 @@
 .vs
 
 # Build Artefact Directories
-**/bin
-**/obj
+source/*/bin
+source/*/obj
+
+# Reqnroll Code-Behind Files
+source/*/Features/*.feature.cs
 
 # Reqnroll Generator Plugin DLLs
-**/NuGet/build/**/*.dll
+source/*/NuGet/build/netstandard2.0/*.dll
