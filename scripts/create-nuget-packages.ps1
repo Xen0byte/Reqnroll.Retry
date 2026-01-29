@@ -21,10 +21,10 @@ New-Item -ItemType Directory -Path $OutputDirectory | Out-Null
 
 # pack all generator projects
 $projects = @(
-    "Retry.Reqnroll.MSTest",
-    "Retry.Reqnroll.NUnit",
-    "Retry.Reqnroll.xUnit",
-    "Retry.Reqnroll.TUnit"
+    "Reqnroll.Retry.MSTest",
+    "Reqnroll.Retry.NUnit",
+    "Reqnroll.Retry.xUnit",
+    "Reqnroll.Retry.TUnit"
 )
 
 foreach ($project in $projects) {

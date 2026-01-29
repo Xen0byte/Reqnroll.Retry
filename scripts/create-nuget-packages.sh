@@ -19,10 +19,10 @@ mkdir -p "$OUTPUT_DIRECTORY"
 
 # pack all generator projects
 projects=(
-    "Retry.Reqnroll.MSTest",
-    "Retry.Reqnroll.NUnit",
-    "Retry.Reqnroll.xUnit",
-    "Retry.Reqnroll.TUnit"
+    "Reqnroll.Retry.MSTest",
+    "Reqnroll.Retry.NUnit",
+    "Reqnroll.Retry.xUnit",
+    "Reqnroll.Retry.TUnit"
 )
 
 for project in "${projects[@]}"; do
