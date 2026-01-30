@@ -6,8 +6,8 @@ namespace Reqnroll.Retry.NUnit;
 /// </summary>
 /// <remarks>
 ///     The NUnit RetryAttribute specifies the total number of attempts (not retries after failure).
-///     A value of 1 means no retry; a value of 3 means up to 3 total attempts.
-///     Note: NUnit only retries on assertion failures, not on unexpected exceptions.
+///     A value of 1 means no retry. A value of 2 means up to 2 total attempts. A value of 3 means up to 3 total attempts.
+///     NOTE: NUnit only retries on assertion failures, not on unexpected exceptions.
 /// </remarks>
 public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
 {

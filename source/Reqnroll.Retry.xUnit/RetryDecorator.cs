@@ -5,8 +5,7 @@ namespace Reqnroll.Retry.xUnit;
 ///     This enables automatic retry functionality for BDD scenarios.
 /// </summary>
 /// <remarks>
-///     xUnit does not have a native retry attribute. This decorator uses the xRetry library
-///     by replacing SkippableTheory/SkippableFact with RetryTheory/RetryFact attributes.
+///     xUnit does not have a native retry attribute. This decorator uses the xRetry library by replacing SkippableTheory/SkippableFact with RetryTheory/RetryFact attributes.
 ///     The consuming project must reference the xRetry NuGet package.
 /// </remarks>
 public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
@@ -27,10 +26,11 @@ public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
 
     public void DecorateFrom(TestClassGenerationContext generationContext, CodeMemberMethod testMethod)
     {
-        // Find And Replace Theory/Fact Attributes With RetryTheory/RetryFact
         CodeAttributeDeclaration? attributeToReplace = null;
+
         string? replacementAttributeName = null;
 
+        // Find And Replace Theory/Fact Attributes With RetryTheory/RetryFact
         foreach (CodeAttributeDeclaration attribute in testMethod.CustomAttributes.Cast<CodeAttributeDeclaration>())
         {
             string attributeTypeName = attribute.AttributeType.BaseType;
@@ -67,7 +67,7 @@ public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
             // Copy Any Named Arguments From The Original Attribute (Like DisplayName)
             foreach (CodeAttributeArgument existingArgument in attributeToReplace.Arguments.Cast<CodeAttributeArgument>())
             {
-                if (!string.IsNullOrEmpty(existingArgument.Name))
+                if (string.IsNullOrEmpty(existingArgument.Name) is false)
                 {
                     arguments.Add(existingArgument);
                 }
