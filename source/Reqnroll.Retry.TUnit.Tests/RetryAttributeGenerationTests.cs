@@ -5,11 +5,15 @@ namespace Reqnroll.Retry.TUnit.Tests;
 /// </summary>
 public sealed class RetryAttributeGenerationTests
 {
+    private const string GeneratedFeatureClassName = "RetryAttributeGenerationFeature";
+    private const string GeneratedFeatureFileName = "RetryAttribute.feature.cs";
+    private const string ReqnrollRetryCountKey = "ReqnrollRetryCount";
+
     private static int ExpectedRetryCount => int.Parse
     (
         typeof(RetryAttributeGenerationTests).Assembly
-            .GetCustomAttributes<AssemblyMetadataAttribute>()
-            .SingleOrDefault(attribute => attribute.Key == "ReqnrollRetryCount")?.Value ?? "1"
+            .GetCustomAttributes<System.Reflection.AssemblyMetadataAttribute>()
+            .SingleOrDefault(attribute => attribute.Key == ReqnrollRetryCountKey)?.Value ?? "1"
     );
 
     [Test]
@@ -17,16 +21,16 @@ public sealed class RetryAttributeGenerationTests
     {
         Assembly testAssembly = typeof(RetryAttributeGenerationTests).Assembly;
 
-        Type? featureType = testAssembly.GetTypes().SingleOrDefault(type => type.Name.Contains("RetryAttribute") && type.Name.Contains("Feature"));
+        Type? featureType = testAssembly.GetTypes().SingleOrDefault(type => type.Name == GeneratedFeatureClassName);
 
-        await Assert.That(featureType).IsNotNull().Because(@"Expected to find a generated feature class containing ""RetryAttribute"" and ""Feature"" in the assembly.");
+        await Assert.That(featureType).IsNotNull().Because($"Expected to find the generated feature class {GeneratedFeatureClassName} in the assembly.");
 
         if (featureType is null) return;
 
         MethodInfo[] allMethods = featureType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         MethodInfo[] testMethods = allMethods
-            .Where(method => method.GetCustomAttributes().Any(attribute => attribute.GetType().FullName?.Contains("TestAttribute") == true)).ToArray();
+            .Where(method => method.GetCustomAttributes().Any(attribute => attribute.GetType().FullName?.Contains(nameof(TestAttribute)) == true)).ToArray();
 
         string methodNames = string.Join(", ", allMethods.Select(method => method.Name));
 
@@ -65,7 +69,7 @@ public sealed class RetryAttributeGenerationTests
         if (directory is null) return;
 
         string featuresDirectory = Path.Combine(directory.FullName, "Features");
-        string generatedFilePath = Path.Combine(featuresDirectory, "RetryAttribute.feature.cs");
+        string generatedFilePath = Path.Combine(featuresDirectory, GeneratedFeatureFileName);
 
         await Assert.That(File.Exists(generatedFilePath)).IsTrue().Because($"Expected generated file to exist at: {generatedFilePath}.");
 
@@ -73,11 +77,11 @@ public sealed class RetryAttributeGenerationTests
 
         string retryCount = ExpectedRetryCount.ToString();
 
-        bool containsRetryAttribute = generatedCode.Contains($"[global::TUnit.Core.RetryAttribute({retryCount})]") ||
-                                      generatedCode.Contains($"[TUnit.Core.RetryAttribute({retryCount})]") ||
+        bool containsRetryAttribute = generatedCode.Contains($"[global::TUnit.Core.{nameof(TUnit.Core.RetryAttribute)}({retryCount})]") ||
+                                      generatedCode.Contains($"[TUnit.Core.{nameof(TUnit.Core.RetryAttribute)}({retryCount})]") ||
                                       generatedCode.Contains($"[Retry({retryCount})]") ||
-                                      generatedCode.Contains($"RetryAttribute({retryCount})");
+                                      generatedCode.Contains($"{nameof(TUnit.Core.RetryAttribute)}({retryCount})");
 
-        await Assert.That(containsRetryAttribute).IsTrue().Because($"Expected generated code to contain the Retry attribute with value {retryCount}.");
+        await Assert.That(containsRetryAttribute).IsTrue().Because($"Expected generated code to contain the {nameof(TUnit.Core.RetryAttribute)} with value {retryCount}.");
     }
 }

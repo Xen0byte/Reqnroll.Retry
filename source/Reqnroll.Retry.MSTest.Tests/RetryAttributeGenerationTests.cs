@@ -6,11 +6,15 @@ namespace Reqnroll.Retry.MSTest.Tests;
 [TestClass]
 public sealed class RetryAttributeGenerationTests
 {
+    private const string GeneratedFeatureClassName = "RetryAttributeGenerationFeature";
+    private const string GeneratedFeatureFileName = "RetryAttribute.feature.cs";
+    private const string ReqnrollRetryCountKey = "ReqnrollRetryCount";
+
     private static int ExpectedRetryCount => int.Parse
     (
         typeof(RetryAttributeGenerationTests).Assembly
             .GetCustomAttributes<AssemblyMetadataAttribute>()
-            .SingleOrDefault(attribute => attribute.Key == "ReqnrollRetryCount")?.Value ?? "1"
+            .SingleOrDefault(attribute => attribute.Key == ReqnrollRetryCountKey)?.Value ?? "1"
     );
 
     [TestMethod]
@@ -18,14 +22,14 @@ public sealed class RetryAttributeGenerationTests
     {
         Assembly testAssembly = typeof(RetryAttributeGenerationTests).Assembly;
 
-        Type? featureType = testAssembly.GetTypes().SingleOrDefault(type => type.Name.Contains("RetryAttribute") && type.Name.Contains("Feature"));
+        Type? featureType = testAssembly.GetTypes().SingleOrDefault(type => type.Name == GeneratedFeatureClassName);
 
-        Assert.IsNotNull(featureType, @"Expected to find a generated feature class containing ""RetryAttribute"" and ""Feature"" in the assembly.");
+        Assert.IsNotNull(featureType, $"Expected to find the generated feature class {GeneratedFeatureClassName} in the assembly.");
 
         MethodInfo[] testMethods = featureType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
             .Where(method => method.GetCustomAttribute<TestMethodAttribute>() is not null).ToArray();
 
-        Assert.IsNotEmpty(testMethods, @"Expected to find at least one test method with [TestMethod] attribute.");
+        Assert.IsNotEmpty(testMethods, $"Expected to find at least one test method with [{nameof(TestMethodAttribute)}] attribute.");
 
         foreach (MethodInfo testMethod in testMethods)
         {
@@ -53,7 +57,7 @@ public sealed class RetryAttributeGenerationTests
         Assert.IsNotNull(directory, "Could not find project directory.");
 
         string featuresDirectory = Path.Combine(directory.FullName, "Features");
-        string generatedFilePath = Path.Combine(featuresDirectory, "RetryAttribute.feature.cs");
+        string generatedFilePath = Path.Combine(featuresDirectory, GeneratedFeatureFileName);
 
         Assert.IsTrue(File.Exists(generatedFilePath), $"Expected generated file to exist at: {generatedFilePath}.");
 
@@ -61,11 +65,11 @@ public sealed class RetryAttributeGenerationTests
 
         string retryCount = ExpectedRetryCount.ToString();
 
-        bool containsRetryAttribute = generatedCode.Contains($"[global::Microsoft.VisualStudio.TestTools.UnitTesting.RetryAttribute({retryCount})]") ||
-                                      generatedCode.Contains($"[Microsoft.VisualStudio.TestTools.UnitTesting.RetryAttribute({retryCount})]") ||
+        bool containsRetryAttribute = generatedCode.Contains($"[global::Microsoft.VisualStudio.TestTools.UnitTesting.{nameof(RetryAttribute)}({retryCount})]") ||
+                                      generatedCode.Contains($"[Microsoft.VisualStudio.TestTools.UnitTesting.{nameof(RetryAttribute)}({retryCount})]") ||
                                       generatedCode.Contains($"[Retry({retryCount})]") ||
-                                      generatedCode.Contains($"RetryAttribute({retryCount})");
+                                      generatedCode.Contains($"{nameof(RetryAttribute)}({retryCount})");
 
-        Assert.IsTrue(containsRetryAttribute, $"Expected generated code to contain the Retry attribute with value {retryCount}.");
+        Assert.IsTrue(containsRetryAttribute, $"Expected generated code to contain the {nameof(RetryAttribute)} with value {retryCount}.");
     }
 }

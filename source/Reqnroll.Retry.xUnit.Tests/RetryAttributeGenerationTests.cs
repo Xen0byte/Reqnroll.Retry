@@ -5,11 +5,15 @@ namespace Reqnroll.Retry.xUnit.Tests;
 /// </summary>
 public sealed class RetryAttributeGenerationTests
 {
+    private const string GeneratedFeatureClassName = "RetryAttributeGenerationFeature";
+    private const string GeneratedFeatureFileName = "RetryAttribute.feature.cs";
+    private const string ReqnrollRetryCountKey = "ReqnrollRetryCount";
+
     private static int ExpectedRetryCount => int.Parse
     (
         typeof(RetryAttributeGenerationTests).Assembly
             .GetCustomAttributes<AssemblyMetadataAttribute>()
-            .SingleOrDefault(attribute => attribute.Key == "ReqnrollRetryCount")?.Value ?? "1"
+            .SingleOrDefault(attribute => attribute.Key == ReqnrollRetryCountKey)?.Value ?? "1"
     );
 
     [Fact]
@@ -17,7 +21,7 @@ public sealed class RetryAttributeGenerationTests
     {
         Assembly testAssembly = typeof(RetryAttributeGenerationTests).Assembly;
 
-        Type? featureType = testAssembly.GetTypes().SingleOrDefault(type => type.Name.Contains("RetryAttribute") && type.Name.Contains("Feature"));
+        Type? featureType = testAssembly.GetTypes().SingleOrDefault(type => type.Name == GeneratedFeatureClassName);
 
         Assert.NotNull(featureType);
 
@@ -31,7 +35,7 @@ public sealed class RetryAttributeGenerationTests
 
         MethodInfo[] allRetryMethods = retryTheoryMethods.Concat(retryFactMethods).ToArray();
 
-        Assert.True(allRetryMethods.Length > 0, @"Expected to find at least one test method with [RetryTheory] or [RetryFact] attribute.");
+        Assert.True(allRetryMethods.Length > 0, $"Expected to find at least one test method with [{nameof(xRetry.RetryTheoryAttribute)}] or [{nameof(xRetry.RetryFactAttribute)}] attribute.");
 
         foreach (MethodInfo testMethod in retryTheoryMethods)
         {
@@ -77,7 +81,7 @@ public sealed class RetryAttributeGenerationTests
         if (directory is null) return;
 
         string featuresDirectory = Path.Combine(directory.FullName, "Features");
-        string generatedFilePath = Path.Combine(featuresDirectory, "RetryAttribute.feature.cs");
+        string generatedFilePath = Path.Combine(featuresDirectory, GeneratedFeatureFileName);
 
         Assert.True(File.Exists(generatedFilePath), $"Expected generated file to exist at: {generatedFilePath}.");
 
@@ -85,11 +89,11 @@ public sealed class RetryAttributeGenerationTests
 
         string retryCount = ExpectedRetryCount.ToString();
 
-        bool containsRetryAttribute = generatedCode.Contains($"RetryTheoryAttribute({retryCount}") ||
-                                      generatedCode.Contains($"RetryFactAttribute({retryCount}") ||
+        bool containsRetryAttribute = generatedCode.Contains($"{nameof(xRetry.RetryTheoryAttribute)}({retryCount}") ||
+                                      generatedCode.Contains($"{nameof(xRetry.RetryFactAttribute)}({retryCount}") ||
                                       generatedCode.Contains($"[RetryTheory({retryCount})") ||
                                       generatedCode.Contains($"[RetryFact({retryCount})");
 
-        Assert.True(containsRetryAttribute, $"Expected generated code to contain the RetryTheory or RetryFact attribute with value {retryCount}.");
+        Assert.True(containsRetryAttribute, $"Expected generated code to contain the {nameof(xRetry.RetryTheoryAttribute)} or {nameof(xRetry.RetryFactAttribute)} with value {retryCount}.");
     }
 }
