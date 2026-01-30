@@ -12,7 +12,7 @@ public sealed class RetryAttributeGenerationTests
     private static int ExpectedRetryCount => int.Parse
     (
         typeof(RetryAttributeGenerationTests).Assembly
-            .GetCustomAttributes<System.Reflection.AssemblyMetadataAttribute>()
+            .GetCustomAttributes<AssemblyMetadataAttribute>()
             .SingleOrDefault(attribute => attribute.Key == ReqnrollRetryCountKey)?.Value ?? "1"
     );
 
@@ -77,11 +77,11 @@ public sealed class RetryAttributeGenerationTests
 
         string retryCount = ExpectedRetryCount.ToString();
 
-        bool containsRetryAttribute = generatedCode.Contains($"[global::TUnit.Core.{nameof(TUnit.Core.RetryAttribute)}({retryCount})]") ||
-                                      generatedCode.Contains($"[TUnit.Core.{nameof(TUnit.Core.RetryAttribute)}({retryCount})]") ||
+        bool containsRetryAttribute = generatedCode.Contains($"[global::TUnit.Core.{nameof(RetryAttribute)}({retryCount})]") ||
+                                      generatedCode.Contains($"[TUnit.Core.{nameof(RetryAttribute)}({retryCount})]") ||
                                       generatedCode.Contains($"[Retry({retryCount})]") ||
-                                      generatedCode.Contains($"{nameof(TUnit.Core.RetryAttribute)}({retryCount})");
+                                      generatedCode.Contains($"{nameof(RetryAttribute)}({retryCount})");
 
-        await Assert.That(containsRetryAttribute).IsTrue().Because($"Expected generated code to contain the {nameof(TUnit.Core.RetryAttribute)} with value {retryCount}.");
+        await Assert.That(containsRetryAttribute).IsTrue().Because($"Expected generated code to contain the {nameof(RetryAttribute)} with value {retryCount}.");
     }
 }
