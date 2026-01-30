@@ -1,4 +1,3 @@
-global using System;
 global using System.CodeDom;
 global using System.Collections.Generic;
 global using System.Linq;
