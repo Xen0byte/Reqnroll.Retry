@@ -47,10 +47,18 @@ jobs:
           echo "Package Version: $VERSION"
 
       - name: Restore Dependencies
-        run: dotnet restore
+        run: |
+          dotnet restore source/Reqnroll.Retry.MSTest/Reqnroll.Retry.MSTest.csproj
+          dotnet restore source/Reqnroll.Retry.NUnit/Reqnroll.Retry.NUnit.csproj
+          dotnet restore source/Reqnroll.Retry.xUnit/Reqnroll.Retry.xUnit.csproj
+          dotnet restore source/Reqnroll.Retry.TUnit/Reqnroll.Retry.TUnit.csproj
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: |
+          dotnet build source/Reqnroll.Retry.MSTest/Reqnroll.Retry.MSTest.csproj --configuration Release --no-restore
+          dotnet build source/Reqnroll.Retry.NUnit/Reqnroll.Retry.NUnit.csproj --configuration Release --no-restore
+          dotnet build source/Reqnroll.Retry.xUnit/Reqnroll.Retry.xUnit.csproj --configuration Release --no-restore
+          dotnet build source/Reqnroll.Retry.TUnit/Reqnroll.Retry.TUnit.csproj --configuration Release --no-restore
 
       - name: Pack NuGet Packages
         run: |
