@@ -4,7 +4,7 @@ namespace Reqnroll.Retry.xUnit;
 
 /// <summary>
 ///     A Reqnroll generator plugin that adds xRetry retry functionality to all generated BDD test methods.
-///     The retry count can be configured via the "RetryCount" plugin parameter in the project file.
+///     The retry count can be configured via the "ReqnrollRetryCount" property in the project file.
 /// </summary>
 /// <remarks>
 ///     xUnit does not have a native retry attribute, so this plugin uses the xRetry library.

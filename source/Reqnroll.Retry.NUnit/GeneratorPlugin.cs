@@ -4,7 +4,7 @@ namespace Reqnroll.Retry.NUnit;
 
 /// <summary>
 ///     A Reqnroll generator plugin that adds the NUnit [Retry] attribute to all generated BDD test methods.
-///     The retry count can be configured via the "RetryCount" plugin parameter in the project file.
+///     The retry count can be configured via the "ReqnrollRetryCount" property in the project file.
 /// </summary>
 public sealed class GeneratorPlugin : IGeneratorPlugin
 {
