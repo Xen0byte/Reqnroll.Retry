@@ -22,9 +22,9 @@ public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
 
     public void DecorateFrom(TestClassGenerationContext generationContext, CodeMemberMethod testMethod)
     {
-        CodeTypeReference attributeTypeReference = new(RetryAttribute, CodeTypeReferenceOptions.GlobalReference);
+        CodeTypeReference attributeTypeReference = new (RetryAttribute, CodeTypeReferenceOptions.GlobalReference);
 
-        CodeAttributeDeclaration retryAttribute = new(attributeTypeReference, new CodeAttributeArgument(new CodePrimitiveExpression(RetryCount)));
+        CodeAttributeDeclaration retryAttribute = new (attributeTypeReference, new CodeAttributeArgument(new CodePrimitiveExpression(RetryCount)));
 
         testMethod.CustomAttributes.Add(retryAttribute);
     }

@@ -56,10 +56,10 @@ public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
             testMethod.CustomAttributes.Remove(attributeToReplace);
 
             // Add The Retry Attribute With The Same Display Name And Retry Count
-            CodeTypeReference attributeTypeReference = new(replacementAttributeName, CodeTypeReferenceOptions.GlobalReference);
+            CodeTypeReference attributeTypeReference = new (replacementAttributeName, CodeTypeReferenceOptions.GlobalReference);
 
             // Copy Existing Arguments (Like DisplayName) And Add MaxRetries
-            List<CodeAttributeArgument> arguments = new();
+            List<CodeAttributeArgument> arguments = new ();
 
             // Add MaxRetries As The First Argument
             arguments.Add(new CodeAttributeArgument(new CodePrimitiveExpression(RetryCount)));
@@ -73,7 +73,7 @@ public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
                 }
             }
 
-            CodeAttributeDeclaration retryAttribute = new(attributeTypeReference, arguments.ToArray());
+            CodeAttributeDeclaration retryAttribute = new (attributeTypeReference, arguments.ToArray());
 
             testMethod.CustomAttributes.Add(retryAttribute);
         }

@@ -50,9 +50,9 @@ public sealed class RetryAttributeGenerationTests
 
         if (projectDirectory is null) return;
 
-        DirectoryInfo? directory = new DirectoryInfo(projectDirectory);
+        DirectoryInfo? directory = new (projectDirectory);
 
-        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "Reqnroll.Retry.NUnit.Tests.csproj")))
+        while (directory is not null && File.Exists(Path.Combine(directory.FullName, "Reqnroll.Retry.NUnit.Tests.csproj")) is false)
         {
             directory = directory.Parent;
         }

@@ -47,9 +47,9 @@ public sealed class RetryAttributeGenerationTests
 
         Assert.IsNotNull(projectDirectory, "Could not determine assembly location directory.");
 
-        DirectoryInfo? directory = new DirectoryInfo(projectDirectory);
+        DirectoryInfo? directory = new (projectDirectory);
 
-        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "Reqnroll.Retry.MSTest.Tests.csproj")))
+        while (directory is not null && File.Exists(Path.Combine(directory.FullName, "Reqnroll.Retry.MSTest.Tests.csproj")) is false)
         {
             directory = directory.Parent;
         }
