@@ -4,4 +4,8 @@ global using System.Reflection;
 
 global using Reqnroll.UnitTestProvider;
 
+global using Reqnroll.Retry.xUnit.Tests.Features;
+global using Reqnroll.Retry.xUnit.Tests.StepBindings;
+
 global using Xunit;
+global using Xunit.Sdk;
