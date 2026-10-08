@@ -12,6 +12,11 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <!-- Generate The Code-Behind Outside The "Reqnroll" And "TUnit" Namespaces, Because Reqnroll.TUnit References "TUnit.Core" Without "global::", Which Would Otherwise Resolve To "Reqnroll.TUnit" Or "Reqnroll.Retry.TUnit" -->
+        <RootNamespace>ReqnrollRetryTUnitTests</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <!-- Retry Count Override (Default Is 1 Retry) -->
         <ReqnrollRetryCount>2</ReqnrollRetryCount>
     </PropertyGroup>

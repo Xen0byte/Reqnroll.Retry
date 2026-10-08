@@ -1,3 +1,5 @@
+using System.Reflection; // Not A Global Using, Because Reqnroll.TUnit's Generated Assembly Hooks Use "Assembly" To Refer To "HookType.Assembly"
+
 namespace Reqnroll.Retry.TUnit.Tests;
 
 /// <summary>
@@ -9,7 +11,7 @@ public sealed class RetryAttributeGenerationTests
     private const string GeneratedFeatureFileName = "RetryAttribute.feature.cs";
     private const string ReqnrollRetryCountKey = "ReqnrollRetryCount";
 
-    private static int ExpectedRetryCount => int.Parse
+    internal static int ExpectedRetryCount => int.Parse
     (
         typeof(RetryAttributeGenerationTests).Assembly
             .GetCustomAttributes<AssemblyMetadataAttribute>()

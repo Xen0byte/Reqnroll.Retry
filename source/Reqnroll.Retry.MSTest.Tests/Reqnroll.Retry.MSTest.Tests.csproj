@@ -12,6 +12,11 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <!-- Run On Microsoft.Testing.Platform, Which "global.json" Requires Of Every Test Project For "dotnet test" -->
+        <EnableMSTestRunner>true</EnableMSTestRunner>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <!-- Retry Count Override (Default Is 1 Retry) -->
         <ReqnrollRetryCount>2</ReqnrollRetryCount>
     </PropertyGroup>
