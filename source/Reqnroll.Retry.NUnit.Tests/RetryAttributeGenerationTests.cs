@@ -10,7 +10,7 @@ public sealed class RetryAttributeGenerationTests
     private const string GeneratedFeatureFileName = "RetryAttribute.feature.cs";
     private const string ReqnrollRetryCountKey = "ReqnrollRetryCount";
 
-    private static int ExpectedRetryCount => int.Parse
+    internal static int ExpectedRetryCount => int.Parse
     (
         typeof(RetryAttributeGenerationTests).Assembly
             .GetCustomAttributes<AssemblyMetadataAttribute>()
@@ -68,13 +68,14 @@ public sealed class RetryAttributeGenerationTests
 
         string generatedCode = File.ReadAllText(generatedFilePath);
 
-        string retryCount = ExpectedRetryCount.ToString();
+        // NUnit Counts The Initial Attempt, So The Retry Attribute Should Allow One Attempt More Than The Number Of Retries
+        string tryCount = (ExpectedRetryCount + 1).ToString();
 
-        bool containsRetryAttribute = generatedCode.Contains($"[global::NUnit.Framework.{nameof(RetryAttribute)}({retryCount})]") ||
-                                      generatedCode.Contains($"[NUnit.Framework.{nameof(RetryAttribute)}({retryCount})]") ||
-                                      generatedCode.Contains($"[Retry({retryCount})]") ||
-                                      generatedCode.Contains($"{nameof(RetryAttribute)}({retryCount})");
+        bool containsRetryAttribute = generatedCode.Contains($"[global::NUnit.Framework.{nameof(RetryAttribute)}({tryCount})]") ||
+                                      generatedCode.Contains($"[NUnit.Framework.{nameof(RetryAttribute)}({tryCount})]") ||
+                                      generatedCode.Contains($"[Retry({tryCount})]") ||
+                                      generatedCode.Contains($"{nameof(RetryAttribute)}({tryCount})");
 
-        Assert.That(containsRetryAttribute, Is.True, $"Expected generated code to contain the {nameof(RetryAttribute)} with value {retryCount}.");
+        Assert.That(containsRetryAttribute, Is.True, $"Expected generated code to contain the {nameof(RetryAttribute)} with value {tryCount}.");
     }
 }

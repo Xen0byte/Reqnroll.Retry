@@ -23,7 +23,7 @@
         <Authors>Aleksander Reinhardt</Authors>
         <Copyright>Copyright (c) 2026 Aleksander Reinhardt</Copyright>
         <Summary>Adds automatic retry functionality to Reqnroll tests using xUnit.</Summary>
-        <Description>A Reqnroll generator plugin that automatically adds the xUnit retry attribute to all generated BDD test methods. Supports configurable retry count via the ReqnrollRetryCount MSBuild property.</Description>
+        <Description>A Reqnroll generator plugin that automatically adds retry logic to all generated xUnit BDD test methods, without any additional dependencies. Supports configurable retry count via the ReqnrollRetryCount MSBuild property.</Description>
         <PackageTags>reqnroll;bdd;xunit;retry;testing;specflow</PackageTags>
         <PackageReadmeFile>readme.md</PackageReadmeFile>
         <PackageLicenseFile>license</PackageLicenseFile>

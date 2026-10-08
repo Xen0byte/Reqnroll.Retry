@@ -16,9 +16,4 @@
         </ItemGroup>
     </Target>
 
-    <ItemGroup>
-        <!-- xUnit Doesn't Natively Support Retry Because It's A Shit Testing Library, So We Use xRetry -->
-        <PackageReference Include="xRetry" Version="*" />
-    </ItemGroup>
-
 </Project>

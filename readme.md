@@ -34,4 +34,4 @@ By default, failed tests will retry once. You can change this by setting the `Re
 
 ## How It Works
 
-These are Reqnroll generator plugins. When Reqnroll generates the code-behind files for your feature files, the plugin intercepts the generation process and adds the appropriate retry attribute to each test method.
+These are Reqnroll generator plugins. When Reqnroll generates the code-behind files for your feature files, the plugin intercepts the generation process and adds the appropriate retry attribute to each test method. xUnit has no retry attribute, so for xUnit the plugin wraps each test method in a retry loop instead, without any additional dependencies.

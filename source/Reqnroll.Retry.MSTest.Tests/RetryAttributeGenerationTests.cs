@@ -10,7 +10,7 @@ public sealed class RetryAttributeGenerationTests
     private const string GeneratedFeatureFileName = "RetryAttribute.feature.cs";
     private const string ReqnrollRetryCountKey = "ReqnrollRetryCount";
 
-    private static int ExpectedRetryCount => int.Parse
+    internal static int ExpectedRetryCount => int.Parse
     (
         typeof(RetryAttributeGenerationTests).Assembly
             .GetCustomAttributes<AssemblyMetadataAttribute>()

@@ -5,8 +5,8 @@ namespace Reqnroll.Retry.NUnit;
 ///     This enables automatic retry functionality for BDD scenarios.
 /// </summary>
 /// <remarks>
-///     The NUnit RetryAttribute specifies the total number of attempts (not retries after failure).
-///     A value of 1 means no retry. A value of 2 means up to 2 total attempts. A value of 3 means up to 3 total attempts.
+///     The NUnit RetryAttribute specifies the total number of attempts (not retries after failure), so the attribute is given the retry count plus one for the initial attempt.
+///     A retry count of 1 means up to 2 total attempts. A retry count of 2 means up to 3 total attempts.
 ///     NOTE: NUnit only retries on assertion failures, not on unexpected exceptions.
 /// </remarks>
 public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
@@ -24,7 +24,8 @@ public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
     {
         CodeTypeReference attributeTypeReference = new (RetryAttribute, CodeTypeReferenceOptions.GlobalReference);
 
-        CodeAttributeDeclaration retryAttribute = new (attributeTypeReference, new CodeAttributeArgument(new CodePrimitiveExpression(RetryCount)));
+        // The Initial Attempt Plus One Attempt Per Retry
+        CodeAttributeDeclaration retryAttribute = new (attributeTypeReference, new CodeAttributeArgument(new CodePrimitiveExpression(RetryCount + 1)));
 
         testMethod.CustomAttributes.Add(retryAttribute);
     }
