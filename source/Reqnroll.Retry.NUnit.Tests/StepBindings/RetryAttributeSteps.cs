@@ -17,10 +17,9 @@ public sealed class RetryAttributeSteps
         // Fail The Initial Attempt And Every Retry Except The Last One, So The Test Only Passes If Every Configured Retry Is Made
         int attempt = Interlocked.Increment(ref _attemptCount);
 
-        // NUnit Only Retries Assertion Failures, Not Unexpected Exceptions
         if (attempt <= RetryAttributeGenerationTests.ExpectedRetryCount)
         {
-            Assert.Fail($"Simulated Transient Failure On Attempt {attempt}.");
+            throw new InvalidOperationException($"Simulated Transient Failure On Attempt {attempt}.");
         }
     }
 

@@ -2,6 +2,9 @@
 source/*/bin
 source/*/obj
 
+# Test Report Directories
+TestResults
+
 # Reqnroll Code-Behind Files
 source/*/Features/*.feature.cs
 

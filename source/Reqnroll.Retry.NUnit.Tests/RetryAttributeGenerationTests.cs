@@ -7,7 +7,6 @@ namespace Reqnroll.Retry.NUnit.Tests;
 public sealed class RetryAttributeGenerationTests
 {
     private const string GeneratedFeatureClassName = "RetryAttributeGenerationFeature";
-    private const string GeneratedFeatureFileName = "RetryAttribute.feature.cs";
     private const string ReqnrollRetryCountKey = "ReqnrollRetryCount";
 
     internal static int ExpectedRetryCount => int.Parse
@@ -38,44 +37,15 @@ public sealed class RetryAttributeGenerationTests
             RetryAttribute? retryAttribute = testMethod.GetCustomAttribute<RetryAttribute>();
 
             Assert.That(retryAttribute, Is.Not.Null, $@"Expected test method ""{testMethod.Name}"" to have the [Retry] attribute.");
+
+            // NUnit Does Not Expose The Try Count, So Read It From The Attribute's Constructor Argument
+            CustomAttributeData retryAttributeData = testMethod.GetCustomAttributesData().Single(attribute => attribute.AttributeType == typeof(RetryAttribute));
+
+            // NUnit Counts The Initial Attempt, So The Retry Attribute Should Allow One Attempt More Than The Number Of Retries
+            Assert.That(retryAttributeData.ConstructorArguments.Single().Value, Is.EqualTo(ExpectedRetryCount + 1), $@"Expected test method ""{testMethod.Name}"" to have a try count of {ExpectedRetryCount + 1} (configured via ReqnrollRetryCount, plus the initial attempt).");
+
+            // NUnit Only Retries Assertion Failures Unless Told Which Exceptions To Retry
+            Assert.That(retryAttribute?.RetryExceptions, Does.Contain(typeof(Exception)), $@"Expected test method ""{testMethod.Name}"" to be retried on any exception.");
         }
-    }
-
-    [Test]
-    public void Generated_Feature_Code_File_Should_Contain_Retry_Attribute()
-    {
-        string? projectDirectory = Path.GetDirectoryName(typeof(RetryAttributeGenerationTests).Assembly.Location);
-
-        Assert.That(projectDirectory, Is.Not.Null, "Could not determine assembly location directory.");
-
-        if (projectDirectory is null) return;
-
-        DirectoryInfo? directory = new (projectDirectory);
-
-        while (directory is not null && File.Exists(Path.Combine(directory.FullName, "Reqnroll.Retry.NUnit.Tests.csproj")) is false)
-        {
-            directory = directory.Parent;
-        }
-
-        Assert.That(directory, Is.Not.Null, "Could not find project directory.");
-
-        if (directory is null) return;
-
-        string featuresDirectory = Path.Combine(directory.FullName, "Features");
-        string generatedFilePath = Path.Combine(featuresDirectory, GeneratedFeatureFileName);
-
-        Assert.That(File.Exists(generatedFilePath), Is.True, $"Expected generated file to exist at: {generatedFilePath}.");
-
-        string generatedCode = File.ReadAllText(generatedFilePath);
-
-        // NUnit Counts The Initial Attempt, So The Retry Attribute Should Allow One Attempt More Than The Number Of Retries
-        string tryCount = (ExpectedRetryCount + 1).ToString();
-
-        bool containsRetryAttribute = generatedCode.Contains($"[global::NUnit.Framework.{nameof(RetryAttribute)}({tryCount})]") ||
-                                      generatedCode.Contains($"[NUnit.Framework.{nameof(RetryAttribute)}({tryCount})]") ||
-                                      generatedCode.Contains($"[Retry({tryCount})]") ||
-                                      generatedCode.Contains($"{nameof(RetryAttribute)}({tryCount})");
-
-        Assert.That(containsRetryAttribute, Is.True, $"Expected generated code to contain the {nameof(RetryAttribute)} with value {tryCount}.");
     }
 }

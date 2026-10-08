@@ -20,6 +20,9 @@ public sealed class GeneratorPlugin : IGeneratorPlugin
     {
         int retryCount = GetRetryCount(generatorPluginParameters);
 
+        // A Retry Count Of 0 Disables Retries
+        if (retryCount == 0) return;
+
         generatorPluginEvents.RegisterDependencies += (sender, eventArguments) =>
         {
             eventArguments.ObjectContainer.RegisterFactoryAs<IFeatureGeneratorProvider>
@@ -43,8 +46,10 @@ public sealed class GeneratorPlugin : IGeneratorPlugin
     {
         IDictionary<string, string> parameters = generatorPluginParameters.GetParametersAsDictionary();
 
-        return parameters.TryGetValue(RetryCountParameter, out string? retryCountString) && int.TryParse(retryCountString, out int retryCount) && retryCount > 0
+        if (parameters.TryGetValue(RetryCountParameter, out string? retryCountString) is false) return DefaultRetryCount;
+
+        return int.TryParse(retryCountString, out int retryCount) && retryCount >= 0
             ? retryCount
-            : DefaultRetryCount;
+            : throw new ReqnrollException($@"The ""{RetryCountParameter}"" parameter must be a whole number of 0 or more, but is ""{retryCountString}"".");
     }
 }

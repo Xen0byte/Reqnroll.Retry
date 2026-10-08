@@ -9,9 +9,12 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 
+  # The Packages Are Versioned After The Tag, For Example "1.0.1" Or "1.1.0-beta"
+  PACKAGE_VERSION: ${{ github.ref_name }}
+
 jobs:
   release:
-    name: Build, Release, And Publish
+    name: Build, Test, Release, And Publish
     runs-on: ubuntu-latest
 
     permissions:
@@ -36,20 +39,24 @@ jobs:
 
       - name: Build
         run: |
-          dotnet build source/Reqnroll.Retry.MSTest/Reqnroll.Retry.MSTest.csproj --configuration Release --no-restore
-          dotnet build source/Reqnroll.Retry.NUnit/Reqnroll.Retry.NUnit.csproj --configuration Release --no-restore
-          dotnet build source/Reqnroll.Retry.xUnit/Reqnroll.Retry.xUnit.csproj --configuration Release --no-restore
-          dotnet build source/Reqnroll.Retry.TUnit/Reqnroll.Retry.TUnit.csproj --configuration Release --no-restore
+          dotnet build source/Reqnroll.Retry.MSTest/Reqnroll.Retry.MSTest.csproj --configuration Release --no-restore -p:Version=$PACKAGE_VERSION
+          dotnet build source/Reqnroll.Retry.NUnit/Reqnroll.Retry.NUnit.csproj --configuration Release --no-restore -p:Version=$PACKAGE_VERSION
+          dotnet build source/Reqnroll.Retry.xUnit/Reqnroll.Retry.xUnit.csproj --configuration Release --no-restore -p:Version=$PACKAGE_VERSION
+          dotnet build source/Reqnroll.Retry.TUnit/Reqnroll.Retry.TUnit.csproj --configuration Release --no-restore -p:Version=$PACKAGE_VERSION
 
       - name: Pack NuGet Packages
         run: |
-          dotnet pack source/Reqnroll.Retry.MSTest/Reqnroll.Retry.MSTest.csproj --configuration Release --no-build --output ./nupkgs
-          dotnet pack source/Reqnroll.Retry.NUnit/Reqnroll.Retry.NUnit.csproj --configuration Release --no-build --output ./nupkgs
-          dotnet pack source/Reqnroll.Retry.xUnit/Reqnroll.Retry.xUnit.csproj --configuration Release --no-build --output ./nupkgs
-          dotnet pack source/Reqnroll.Retry.TUnit/Reqnroll.Retry.TUnit.csproj --configuration Release --no-build --output ./nupkgs
+          dotnet pack source/Reqnroll.Retry.MSTest/Reqnroll.Retry.MSTest.csproj --configuration Release --no-build --output ./nupkgs -p:Version=$PACKAGE_VERSION
+          dotnet pack source/Reqnroll.Retry.NUnit/Reqnroll.Retry.NUnit.csproj --configuration Release --no-build --output ./nupkgs -p:Version=$PACKAGE_VERSION
+          dotnet pack source/Reqnroll.Retry.xUnit/Reqnroll.Retry.xUnit.csproj --configuration Release --no-build --output ./nupkgs -p:Version=$PACKAGE_VERSION
+          dotnet pack source/Reqnroll.Retry.TUnit/Reqnroll.Retry.TUnit.csproj --configuration Release --no-build --output ./nupkgs -p:Version=$PACKAGE_VERSION
 
       - name: List Packages
         run: ls -la ./nupkgs
+
+      # Run The Tests Against The Packed NuGet Packages, Rather Than Against The Plugin Projects, So A Broken Package Is Never Published
+      - name: Test NuGet Packages
+        run: dotnet test --solution source/Reqnroll.Retry.slnx -p:ReqnrollRetryPackageVersion=$PACKAGE_VERSION
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -63,7 +70,6 @@ jobs:
       - name: Publish To NuGet Registry
         run: |
           dotnet nuget push ./nupkgs/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
-          dotnet nuget push ./nupkgs/*.snupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
 
       - name: Publish To GitHub Packages
         run: |

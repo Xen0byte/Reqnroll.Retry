@@ -7,14 +7,12 @@ namespace Reqnroll.Retry.NUnit;
 /// <remarks>
 ///     The NUnit RetryAttribute specifies the total number of attempts (not retries after failure), so the attribute is given the retry count plus one for the initial attempt.
 ///     A retry count of 1 means up to 2 total attempts. A retry count of 2 means up to 3 total attempts.
-///     NOTE: NUnit only retries on assertion failures, not on unexpected exceptions.
+///     NUnit only retries assertion failures by default, so the attribute also retries on any exception, which requires NUnit 4.5 or later.
 /// </remarks>
 public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
 {
     private const string RetryAttribute = "NUnit.Framework.RetryAttribute";
-    private const int DefaultRetryCount = 1;
-
-    private int RetryCount { get; } = retryCount > 0 ? retryCount : DefaultRetryCount;
+    private const string RetryExceptionsProperty = "RetryExceptions";
 
     public int Priority => PriorityValues.Low;
 
@@ -25,7 +23,19 @@ public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
         CodeTypeReference attributeTypeReference = new (RetryAttribute, CodeTypeReferenceOptions.GlobalReference);
 
         // The Initial Attempt Plus One Attempt Per Retry
-        CodeAttributeDeclaration retryAttribute = new (attributeTypeReference, new CodeAttributeArgument(new CodePrimitiveExpression(RetryCount + 1)));
+        CodeAttributeArgument tryCount = new (new CodePrimitiveExpression(retryCount + 1));
+
+        // Retry On Any Exception, Like Transient Network Or Timeout Errors, Rather Than Only On Assertion Failures
+        CodeAttributeArgument retryExceptions = new
+        (
+            RetryExceptionsProperty, new CodeArrayCreateExpression
+            (
+                new CodeTypeReference(typeof(Type), CodeTypeReferenceOptions.GlobalReference),
+                [new CodeTypeOfExpression(new CodeTypeReference(typeof(Exception), CodeTypeReferenceOptions.GlobalReference))]
+            )
+        );
+
+        CodeAttributeDeclaration retryAttribute = new (attributeTypeReference, tryCount, retryExceptions);
 
         testMethod.CustomAttributes.Add(retryAttribute);
     }

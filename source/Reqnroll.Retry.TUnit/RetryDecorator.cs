@@ -11,10 +11,6 @@ namespace Reqnroll.Retry.TUnit;
 public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
 {
     private const string RetryAttribute = "TUnit.Core.RetryAttribute";
-    private const int DefaultRetryCount = 1;
-
-    private int RetryCount { get; } = retryCount > 0 ? retryCount : DefaultRetryCount;
-
     public int Priority => PriorityValues.Low;
 
     public bool CanDecorateFrom(TestClassGenerationContext generationContext, CodeMemberMethod testMethod) => true; // Apply To All Test Methods
@@ -23,7 +19,7 @@ public sealed class RetryDecorator(int retryCount) : ITestMethodDecorator
     {
         CodeTypeReference attributeTypeReference = new (RetryAttribute, CodeTypeReferenceOptions.GlobalReference);
 
-        CodeAttributeDeclaration retryAttribute = new (attributeTypeReference, new CodeAttributeArgument(new CodePrimitiveExpression(RetryCount)));
+        CodeAttributeDeclaration retryAttribute = new (attributeTypeReference, new CodeAttributeArgument(new CodePrimitiveExpression(retryCount)));
 
         testMethod.CustomAttributes.Add(retryAttribute);
     }

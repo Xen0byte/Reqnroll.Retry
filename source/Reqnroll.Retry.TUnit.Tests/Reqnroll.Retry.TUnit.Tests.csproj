@@ -29,15 +29,32 @@
         </AssemblyAttribute>
     </ItemGroup>
 
-    <ItemGroup>
+    <!-- Test The Packed NuGet Package When A Package Version Is Given (Like In CI), Otherwise Test The Plugin Project Directly -->
+    <PropertyGroup Condition="'$(ReqnrollRetryPackageVersion)' != ''">
+        <RestoreAdditionalProjectSources>$(MSBuildThisFileDirectory)../../nupkgs</RestoreAdditionalProjectSources>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(ReqnrollRetryPackageVersion)' != ''">
+        <PackageReference Include="Retry.Reqnroll.TUnit" Version="$(ReqnrollRetryPackageVersion)" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(ReqnrollRetryPackageVersion)' == ''">
+        <!-- Build The Plugin Without Referencing It, And Collect Its Assembly As An Item, Like A Source Generator -->
         <ProjectReference Include="../Reqnroll.Retry.TUnit/Reqnroll.Retry.TUnit.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <OutputItemType>ReqnrollRetryGeneratorPluginAssembly</OutputItemType>
             <PrivateAssets>all</PrivateAssets>
         </ProjectReference>
     </ItemGroup>
 
-    <!-- Import The Retry Targets File (Simulates NuGet Package Consumption) -->
-    <Import Project="../Reqnroll.Retry.TUnit/NuGet/build/Retry.Reqnroll.TUnit.targets" />
+    <!-- Import The Retry Targets File The Package Would Import, And Point It At The Plugin Project's Assembly -->
+    <Import Project="../Reqnroll.Retry.TUnit/NuGet/build/Retry.Reqnroll.TUnit.targets" Condition="'$(ReqnrollRetryPackageVersion)' == ''" />
+
+    <Target Name="UseReqnrollRetryGeneratorPluginProject" BeforeTargets="AddReqnrollRetryGeneratorPlugin" DependsOnTargets="ResolveProjectReferences" Condition="'$(ReqnrollRetryPackageVersion)' == ''">
+        <PropertyGroup>
+            <ReqnrollRetryGeneratorPluginPath>@(ReqnrollRetryGeneratorPluginAssembly)</ReqnrollRetryGeneratorPluginPath>
+        </PropertyGroup>
+    </Target>
 
     <ItemGroup>
         <Content Include="reqnroll.json">

@@ -1,16 +1,20 @@
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
 
     <PropertyGroup>
-        <!-- Default Retry Count For BDD Tests (Can Be Overridden In Consuming Projects) -->
+        <!-- Default Retry Count For BDD Tests (Can Be Overridden In Consuming Projects, Where 0 Disables Retries) -->
         <ReqnrollRetryCount Condition="'$(ReqnrollRetryCount)' == ''">1</ReqnrollRetryCount>
 
-        <!-- Path To The Generator Plugin DLL -->
-        <_ReqnrollRetryGeneratorPluginPath>$(MSBuildThisFileDirectory)netstandard2.0\Reqnroll.Retry.xUnit.dll</_ReqnrollRetryGeneratorPluginPath>
+        <!-- Path To The Generator Plugin DLL (Can Be Overridden, To Use A Plugin That Was Not Installed From This Package) -->
+        <ReqnrollRetryGeneratorPluginPath Condition="'$(ReqnrollRetryGeneratorPluginPath)' == ''">$(MSBuildThisFileDirectory)netstandard2.0/Reqnroll.Retry.xUnit.dll</ReqnrollRetryGeneratorPluginPath>
     </PropertyGroup>
 
-    <Target Name="AddReqnrollRetryGeneratorPlugin" BeforeTargets="CoreProcessReqnrollFeatureFilesInProject" Condition="Exists('$(_ReqnrollRetryGeneratorPluginPath)')">
+    <Target Name="AddReqnrollRetryGeneratorPlugin" BeforeTargets="CoreProcessReqnrollFeatureFilesInProject">
+        <!-- Fail The Build, Rather Than Silently Generating Tests Without Retries -->
+        <Error Condition="!Exists('$(ReqnrollRetryGeneratorPluginPath)')" Text="The Reqnroll.Retry generator plugin could not be found at '$(ReqnrollRetryGeneratorPluginPath)'." />
+        <Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(ReqnrollRetryCount)', '^[0-9]+$'))" Text="ReqnrollRetryCount must be a whole number of 0 or more, but is '$(ReqnrollRetryCount)'." />
+
         <ItemGroup>
-            <ReqnrollGeneratorPlugins Include="$(_ReqnrollRetryGeneratorPluginPath)">
+            <ReqnrollGeneratorPlugins Include="$(ReqnrollRetryGeneratorPluginPath)">
                 <Parameter_RetryCount>$(ReqnrollRetryCount)</Parameter_RetryCount>
             </ReqnrollGeneratorPlugins>
         </ItemGroup>

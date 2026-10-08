@@ -7,7 +7,6 @@ namespace Reqnroll.Retry.MSTest.Tests;
 public sealed class RetryAttributeGenerationTests
 {
     private const string GeneratedFeatureClassName = "RetryAttributeGenerationFeature";
-    private const string GeneratedFeatureFileName = "RetryAttribute.feature.cs";
     private const string ReqnrollRetryCountKey = "ReqnrollRetryCount";
 
     internal static int ExpectedRetryCount => int.Parse
@@ -38,38 +37,5 @@ public sealed class RetryAttributeGenerationTests
             Assert.IsNotNull(retryAttribute, $@"Expected test method ""{testMethod.Name}"" to have the [Retry] attribute.");
             Assert.AreEqual(ExpectedRetryCount, retryAttribute.MaxRetryAttempts, $@"Expected test method ""{testMethod.Name}"" to have MaxRetryAttempts of {ExpectedRetryCount} (configured via ReqnrollRetryCount).");
         }
-    }
-
-    [TestMethod]
-    public void Generated_Feature_Code_File_Should_Contain_Retry_Attribute()
-    {
-        string? projectDirectory = Path.GetDirectoryName(typeof(RetryAttributeGenerationTests).Assembly.Location);
-
-        Assert.IsNotNull(projectDirectory, "Could not determine assembly location directory.");
-
-        DirectoryInfo? directory = new (projectDirectory);
-
-        while (directory is not null && File.Exists(Path.Combine(directory.FullName, "Reqnroll.Retry.MSTest.Tests.csproj")) is false)
-        {
-            directory = directory.Parent;
-        }
-
-        Assert.IsNotNull(directory, "Could not find project directory.");
-
-        string featuresDirectory = Path.Combine(directory.FullName, "Features");
-        string generatedFilePath = Path.Combine(featuresDirectory, GeneratedFeatureFileName);
-
-        Assert.IsTrue(File.Exists(generatedFilePath), $"Expected generated file to exist at: {generatedFilePath}.");
-
-        string generatedCode = File.ReadAllText(generatedFilePath);
-
-        string retryCount = ExpectedRetryCount.ToString();
-
-        bool containsRetryAttribute = generatedCode.Contains($"[global::Microsoft.VisualStudio.TestTools.UnitTesting.{nameof(RetryAttribute)}({retryCount})]") ||
-                                      generatedCode.Contains($"[Microsoft.VisualStudio.TestTools.UnitTesting.{nameof(RetryAttribute)}({retryCount})]") ||
-                                      generatedCode.Contains($"[Retry({retryCount})]") ||
-                                      generatedCode.Contains($"{nameof(RetryAttribute)}({retryCount})");
-
-        Assert.IsTrue(containsRetryAttribute, $"Expected generated code to contain the {nameof(RetryAttribute)} with value {retryCount}.");
     }
 }

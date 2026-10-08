@@ -2,6 +2,7 @@ global using System;
 global using System.CodeDom;
 global using System.Collections.Generic;
 global using System.Linq;
+global using System.Threading;
 
 global using Reqnroll.Configuration;
 global using Reqnroll.Generator.CodeDom;

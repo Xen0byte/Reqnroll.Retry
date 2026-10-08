@@ -5,15 +5,17 @@
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <WarningsAsErrors>nullable</WarningsAsErrors>
-        <IsReqnrollGeneratorPlugin>true</IsReqnrollGeneratorPlugin>
     </PropertyGroup>
 
     <PropertyGroup>
         <IsPackable>true</IsPackable>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <DebugType>portable</DebugType>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <!-- Pack The Plugin Into "build" Rather Than "lib", Because It Runs Inside The Build Instead Of Being Referenced By The Test Project -->
+        <BuildOutputTargetFolder>build</BuildOutputTargetFolder>
+        <!-- A Generator Plugin Package Deliberately Has No "lib" Folder -->
+        <NoWarn>$(NoWarn);NU5128</NoWarn>
+        <!-- Embed The Debug Symbols, Because Symbol Packages Expect Assemblies In "lib" -->
+        <DebugType>embedded</DebugType>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -36,19 +38,15 @@
 
     <ItemGroup>
         <!-- Include Build Targets For Reqnroll Generator Plugin -->
-        <None Include="NuGet/build/**/*" Pack="true" PackagePath="build" />
+        <None Include="NuGet/build/*.targets" Pack="true" PackagePath="build" />
         <None Include="../../readme.md" Pack="true" PackagePath="" />
         <None Include="../../license" Pack="true" PackagePath="" />
         <None Include="NuGet/icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
 
-    <Target Name="CopyGeneratorPluginToNuGetFolder" AfterTargets="Build">
-        <!-- Copy The Generator Plugin DLL After Every Build, So Local Development Works -->
-        <Copy SourceFiles="bin/$(Configuration)/netstandard2.0/Reqnroll.Retry.MSTest.dll" DestinationFolder="NuGet/build/netstandard2.0" SkipUnchangedFiles="true" />
-    </Target>
-
     <ItemGroup>
-        <PackageReference Include="Reqnroll.CustomPlugin" Version="3.3.4" />
+        <!-- Private, So The Package Declares No Dependencies, Because Reqnroll Provides These Assemblies When It Loads The Plugin -->
+        <PackageReference Include="Reqnroll.CustomPlugin" Version="3.3.4" PrivateAssets="all" />
     </ItemGroup>
 
 </Project>
