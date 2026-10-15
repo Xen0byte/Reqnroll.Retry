@@ -8,6 +8,11 @@
         <ReqnrollRetryGeneratorPluginPath Condition="'$(ReqnrollRetryGeneratorPluginPath)' == ''">$(MSBuildThisFileDirectory)netstandard2.0/Reqnroll.Retry.TUnit.dll</ReqnrollRetryGeneratorPluginPath>
     </PropertyGroup>
 
+    <!-- Reqnroll Only Defines "UpdateFeatureFilesInProject" Before 3.3, Where The Plugin Would Never Be Added, So Fail The Build Rather Than Silently Generating Tests Without Retries -->
+    <Target Name="CheckReqnrollRetryReqnrollVersion" BeforeTargets="UpdateFeatureFilesInProject">
+        <Error Text="Reqnroll.Retry requires Reqnroll 3.3 or later, but this project uses an older version of Reqnroll." />
+    </Target>
+
     <Target Name="AddReqnrollRetryGeneratorPlugin" BeforeTargets="CoreProcessReqnrollFeatureFilesInProject">
         <!-- Fail The Build, Rather Than Silently Generating Tests Without Retries -->
         <Error Condition="!Exists('$(ReqnrollRetryGeneratorPluginPath)')" Text="The Reqnroll.Retry generator plugin could not be found at '$(ReqnrollRetryGeneratorPluginPath)'." />

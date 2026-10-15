@@ -11,7 +11,7 @@ Reqnroll generator plugins that automatically add retries to your BDD test metho
 | [Retry.Reqnroll.xUnit](https://www.nuget.org/packages/Retry.Reqnroll.xUnit)   | xUnit          | xUnit v2 (Reqnroll.xUnit) or xUnit v3 (Reqnroll.xunit.v3) |
 | [Retry.Reqnroll.TUnit](https://www.nuget.org/packages/Retry.Reqnroll.TUnit)   | TUnit          |                                                           |
 
-All packages require Reqnroll 3, and have no dependencies of their own.
+All packages require Reqnroll 3.3 or later, and have no dependencies of their own. On older versions of Reqnroll, the build fails with an error, rather than silently generating tests without retries.
 
 ## Installation
 
